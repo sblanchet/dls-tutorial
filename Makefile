@@ -20,7 +20,7 @@ main.dvi: genpicts document_version.tex
 
 genpicts:
 	mkdir -p genpicts
-#	\cp -f picts/*.eps genpicts/
+	\cp -f picts/*.eps genpicts/
 #	for f in  picts/*.jpg ; do convert $$f  genpicts/`basename $$f .jpg`.eps ; done
 	for f in  picts/*.png ; do convert $$f  genpicts/`basename $$f .png`.eps ; done
 #	for f in  picts/*.gif ; do convert $$f  genpicts/`basename $$f .gif`.eps ; done

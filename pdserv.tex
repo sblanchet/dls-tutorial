@@ -1,0 +1,113 @@
+\chapter{PdServ}
+
+
+PdServ is the library that implements the MSR protocol on the server side.
+
+\section{Install prerequesites}
+
+The following prerequesites must be installed to compile PdServ and its test
+server.
+
+\noindent Open a terminal and type (the ending backslash means that
+the command continues on the next line).
+\begin{verbatim}
+sudo apt install mercurial cmake g++ pkg-config     \
+                 libdb-dev libsasl2-dev libyaml-dev \
+                 liblog4cplus-dev libcommoncpp2-dev
+\end{verbatim}
+
+
+\section{Get PdServ source code}
+Download the source code with mercurial\footnote{The Mercurial main
+  command tool is named \texttt{hg} because the chemical symbol for
+  mercury is \emph{Hg}. Mercurial is a source control management tool
+  very similar to \texttt{git}.}, then switch to the revision that has
+been tested in this tutorial (rev 528).
+
+\begin{verbatim}
+cd /tmp
+hg clone http://hg.code.sf.net/p/pdserv/code pdserv-code
+cd /tmp/pdserv-code
+hg update --rev 528
+\end{verbatim}
+
+\section{Compile PdServ source code}
+
+PdServ needs \texttt{cmake} to create the Makefile.\\
+Do not forget the dot just after \texttt{cmake}
+\begin{verbatim}
+cd /tmp/pdserv-code
+cmake . -DCMAKE_INSTALL_PREFIX=/opt/etherlab
+make
+\end{verbatim}
+
+
+\section{Install PdServ library}
+The library will be installed in \texttt{/opt/etherlab} \\
+Become root with \texttt{sudo -i} then run the installation commands
+
+\begin{verbatim}
+sudo -i
+cd /tmp/pdserv-code
+make install
+echo /opt/etherlab/lib > /etc/ld.so.conf.d/etherlab.conf
+/sbin/ldconfig
+ln -sf /opt/etherlab/lib/pkgconfig/libpdserv.pc /usr/share/pkgconfig/
+\end{verbatim}
+
+
+\section{Compile a test server}
+\label{test-server-for-testmanager}
+PdServ comes with a test server, but it needs to be patched
+to have more visible signals in the viewer.
+
+\noindent Edit the file \texttt{/tmp/pdserv-code/test/test1.cpp} with
+\texttt{gedit},
+\begin{verbatim}
+gedit /tmp/pdserv-code/test/test1.cpp
+\end{verbatim}
+
+\noindent Go to line 165 to add at the beginning of the while loop.
+
+\begin{verbatim}
+        s1.c = (s1.c + 1) % 20;
+\end{verbatim}
+
+\noindent Check the modification with mercurial
+
+
+\begin{verbatim}
+cd /tmp/pdserv-code
+hg diff
+diff -r 90fefe8b0e99 test/test1.cpp
+--- a/test/test1.cpp    Sat Nov 26 15:45:47 2016 +0100
++++ b/test/test1.cpp    Mon Dec 17 13:08:36 2018 +0100
+@@ -162,6 +162,7 @@
+
+     int i;
+     while (1) {
++       s1.c = (s1.c + 1) % 20;
+         //sleep(1);
+         usleep(100000);
+         clock_gettime(CLOCK_REALTIME, &time);
+\end{verbatim}
+
+\noindent Compile the test server
+
+\begin{verbatim}
+g++ -o test1 test1.cpp -I/opt/etherlab/include -L/opt/etherlab/lib -lpdserv
+\end{verbatim}
+
+\noindent Run the program
+\begin{verbatim}
+./test1
+\end{verbatim}
+
+\noindent An error message appears but it is not important for this tutorial.
+\begin{verbatim}
+Error loading default config file /etc/opt/etherlab/pdserv.conf :
+: File is not readable
+\end{verbatim}
+
+\noindent Keep this program running until the tutorial end
+to have a test server for TestManager and DLS.
