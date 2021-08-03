@@ -11,7 +11,7 @@ server.
 \noindent Open a terminal and type (the ending backslash means that
 the command continues on the next line).
 \begin{verbatim}
-sudo apt install mercurial cmake g++ pkg-config     \
+sudo apt install git cmake g++ pkg-config     \
                  libdb-dev libsasl2-dev libyaml-dev \
                  liblog4cplus-dev libcommoncpp2-dev
 \end{verbatim}
@@ -26,9 +26,9 @@ been tested in this tutorial (rev 528).
 
 \begin{verbatim}
 cd /tmp
-hg clone http://hg.code.sf.net/p/pdserv/code pdserv-code
-cd /tmp/pdserv-code
-hg update --rev 528
+git clone https://gitlab.com/etherlab.org/pdserv.git
+cd pdserv
+git checkout https://gitlab.com/etherlab.org/pdserv.git
 \end{verbatim}
 
 \section{Compile PdServ source code}
@@ -36,7 +36,7 @@ hg update --rev 528
 PdServ needs \texttt{cmake} to create the Makefile.\\
 Do not forget the dot just after \texttt{cmake}
 \begin{verbatim}
-cd /tmp/pdserv-code
+cd /tmp/pdserv
 cmake . -DCMAKE_INSTALL_PREFIX=/opt/etherlab
 make
 \end{verbatim}
@@ -48,7 +48,7 @@ Become root with \texttt{sudo -i} then run the installation commands
 
 \begin{verbatim}
 sudo -i
-cd /tmp/pdserv-code
+cd /tmp/pdserv
 make install
 echo /opt/etherlab/lib > /etc/ld.so.conf.d/etherlab.conf
 /sbin/ldconfig
@@ -64,7 +64,7 @@ to have more visible signals in the viewer.
 \noindent Edit the file \texttt{/tmp/pdserv-code/test/test1.cpp} with
 \texttt{gedit},
 \begin{verbatim}
-gedit /tmp/pdserv-code/test/test1.cpp
+gedit /tmp/pdserv/test/test1.cpp
 \end{verbatim}
 
 \noindent Go to line 165 to add at the beginning of the while loop.
@@ -77,16 +77,18 @@ gedit /tmp/pdserv-code/test/test1.cpp
 
 
 \begin{verbatim}
-cd /tmp/pdserv-code
-hg diff
-diff -r 90fefe8b0e99 test/test1.cpp
---- a/test/test1.cpp    Sat Nov 26 15:45:47 2016 +0100
-+++ b/test/test1.cpp    Mon Dec 17 13:08:36 2018 +0100
-@@ -162,6 +162,7 @@
+cd /tmp/pdserv
+git diff
+
+diff --git a/test/test1.cpp b/test/test1.cpp
+index db5cb2d..20c2f68 100644
+--- a/test/test1.cpp
++++ b/test/test1.cpp
+@@ -170,6 +170,7 @@ int main(int argc, const char *argv[])
 
      int i;
      while (1) {
-+       s1.c = (s1.c + 1) % 20;
++        s1.c = (s1.c + 1) % 20;
          //sleep(1);
          usleep(100000);
          clock_gettime(CLOCK_REALTIME, &time);
@@ -101,12 +103,6 @@ g++ -o test1 test1.cpp -I/opt/etherlab/include -L/opt/etherlab/lib -lpdserv
 \noindent Run the program
 \begin{verbatim}
 ./test1
-\end{verbatim}
-
-\noindent An error message appears but it is not important for this tutorial.
-\begin{verbatim}
-Error loading default config file /etc/opt/etherlab/pdserv.conf :
-: File is not readable
 \end{verbatim}
 
 \noindent Keep this program running until the tutorial end

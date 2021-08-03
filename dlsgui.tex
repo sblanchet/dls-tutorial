@@ -10,24 +10,23 @@ The following prerequesites must be installed to compile DLS.
 
 \subsubsection{Binary packages}
 \begin{verbatim}
-sudo apt install qt4-qmake libqt4-dev
+sudo apt install  qt5-qmake qt5-default libqt5svg5-dev qttools5-dev
+
 \end{verbatim}
 
 \noindent Compile widgets
 
 \begin{verbatim}
-cd /tmp/dls-code/widgets
-qmake-qt4
+cd /tmp/dls/widgets
+qmake
 make
 \end{verbatim}
 
-\noindent  Do not worry if qmake-qt4 complains about missing
-translations files.
 
 \noindent Compile dlsgui
 \begin{verbatim}
-cd /tmp/dls-code/gui
-qmake-qt4
+cd /tmp/dls/gui
+qmake
 make
 \end{verbatim}
 
@@ -35,7 +34,7 @@ make
 
 \begin{verbatim}
 sudo -i
-cd /tmp/dls-code
+cd /tmp/dls
 install -m755 -oroot -groot gui/dlsgui /opt/etherlab/bin/
 install -m644 -oroot -groot widgets/libDlsWidgets.so  /opt/etherlab/lib/
 echo /opt/etherlab/lib > /etc/ld.so.conf.d/etherlab.conf

@@ -13,10 +13,11 @@ The following prerequesites must be installed to compile DLS.
 
 \subsubsection{Binary packages}
 \begin{verbatim}
-sudo apt install autoconf libtool libexpat1-dev  \
-                 libxml2-dev libfltk1.3-dev      \
-                 libfftw3-devliburiparser-dev    \
-                 protobuf-compiler libprotobuf-dev
+sudo apt install autoconf libtool libexpat1-dev    \
+                 libxml2-dev libfltk1.3-dev        \
+                 libfftw3-dev liburiparser-dev     \
+                 protobuf-compiler libprotobuf-dev \
+                 libpcre3-dev
 \end{verbatim}
 
 \subsubsection{PdCom library}
@@ -26,9 +27,10 @@ compiled from the sources.
 \noindent Download and compile PdCom library
 \begin{verbatim}
 cd /tmp
-wget http://etherlab.org/download/pdcom/pdcom-3.0.9.tar.bz2
-tar -xf pdcom-3.0.9.tar.bz2
-cd pdcom-3.0.9
+git clone https://gitlab.com/etherlab.org/pdcom.git
+cd pdcom
+git checkout 3.0.9
+./bootstrap.sh
 ./configure --prefix=/opt/etherlab
 make
 \end{verbatim}
@@ -42,19 +44,19 @@ sudo make install
 
 \section{Get DLS source code}
 Download the source code with mercurial, then switch to the revision
-that has been tested in this tutorial (rev 872).
+that has been tested in this tutorial (rev 370553789444).
 \begin{verbatim}
 cd /tmp
-hg clone http://hg.code.sf.net/p/dls/code /tmp/dls-code
-cd dls-code
-hg update --rev 872
+git clone https://gitlab.com/etherlab.org/dls.git
+cd dls
+git checkout 370553789444fc6c19ae22091db00067791370ef
 \end{verbatim}
 
 \section{Compile DLS source code}
 
 DLS uses a classic autoconf script to generate the Makefile.
 \begin{verbatim}
-cd /tmp/dls-code
+cd /tmp/dls
 ./bootstrap.sh
 ./configure --prefix=/opt/etherlab
 make
@@ -65,16 +67,15 @@ make
 The programs are installed in \texttt{/opt/etherlab} \\
 
 \begin{verbatim}
-sudo -i
-cd /tmp/dls-code
-make install
+sudo make -C /tmp/dls install
+sudo ldconfig
 \end{verbatim}
 
 \subsubsection{Create system account}
 Create a system account \texttt{dls}
 
 \begin{verbatim}
-useradd -s /usr/sbin/nologin -r dls
+sudo useradd -s /usr/sbin/nologin -r dls
 \end{verbatim}
 
 
@@ -82,7 +83,7 @@ useradd -s /usr/sbin/nologin -r dls
 
 Create a directory (\texttt{/home/dls/data}) to store recorded data.
 \begin{verbatim}
-install -d -o dls -g dls /home/dls/data
+sudo install -d -o dls -g dls /home/dls/data
 \end{verbatim} 
 
 
