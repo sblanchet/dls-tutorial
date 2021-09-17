@@ -18,7 +18,7 @@ sudo apt install  qt5-qmake qt5-default libqt5svg5-dev qttools5-dev
 
 \begin{verbatim}
 cd /tmp/dls/widgets
-qmake
+qmake PREFIX=/opt/etherlab
 make
 \end{verbatim}
 
@@ -26,7 +26,7 @@ make
 \noindent Compile dlsgui
 \begin{verbatim}
 cd /tmp/dls/gui
-qmake
+qmake PREFIX=/opt/etherlab
 make
 \end{verbatim}
 
@@ -38,6 +38,7 @@ cd /tmp/dls
 install -m755 -oroot -groot gui/dlsgui /opt/etherlab/bin/
 install -m644 -oroot -groot widgets/libDlsWidgets.so  /opt/etherlab/lib/
 echo /opt/etherlab/lib > /etc/ld.so.conf.d/etherlab.conf
+make -c /tmp/dls/widget install
 make -c /tmp/dls/gui install
 ldconfig
 \end{verbatim}
